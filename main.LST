@@ -1,0 +1,75 @@
+C51 COMPILER V9.53.0.0   MAIN                                                              05/29/2021 17:47:56 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE main.c WARNINGLEVEL(1) OPTIMIZE(0,SPEED) BROWSE INCDIR(.\Include;.\Commo
+                    -n) DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          #include "N76E003.h"
+   2          #include "SFR_Macro.h"
+   3          #include "Function_define.h"
+   4          #include "Common.h"
+   5          #include "Delay.h"
+   6          /*==========================================================================*/
+   7          
+   8          void InitialUART0_Timer3(UINT32 u32Baudrate) //use timer3 as Baudrate generator
+   9          {
+  10   1       P06_Quasi_Mode;    //Setting UART pin as Quasi mode for transmit
+  11   1       P07_Input_Mode;   //Setting UART pin as input mode for recieve    
+  12   1       SCON = 0x50;      //UART0 Mode1,REN=1,TI=1
+  13   1       set_SMOD;        //UART0 Double Rate Enable
+  14   1       T3CON &= 0xF8;  //T3PS2=0,T3PS1=0,T3PS0=0(Prescale=1)
+  15   1       set_BRCK;      //UART0 baud rate clock source = Timer3
+  16   1      #ifdef FOSC_160000
+              RH3= HIBYTE(65536 - (1000000/u32Baudrate)-1);      /*16 MHz */
+              RL3= LOBYTE(65536 - (1000000/u32Baudrate)-1);     /*16 MHz */
+              #endif
+  20   1      #ifdef FOSC_166000
+                RH3= HIBYTE(65536 - (1037500/u32Baudrate));      /*16.6 MHz */
+                RL3 = LOBYTE(65536 - (1037500/u32Baudrate));     /*16.6 MHz */
+              #endif
+  24   1       set_TR3;      //Trigger Timer3
+  25   1       set_TI;     //For printf function must setting TI = 1
+  26   1      }
+  27          
+  28          
+  29          
+  30          
+  31          void main (void)
+  32          {
+  33   1                   //char oper;
+  34   1        
+  35   1        Timer0_Delay1ms(300);
+  36   1        Timer0_Delay1ms(300);
+  37   1        Timer0_Delay1ms(300);
+  38   1        
+  39   1                   InitialUART0_Timer3(9600);
+  40   1           ///* 
+  41   1        TI = 1;       // prinft function is used.
+  42   1                   printf("Hello CircuitDigest\r\n");           
+  43   1                   while(1)
+  44   1                   {            
+  45   2                               printf("\r\nPress 1 or Press 2 or Press 3 or Press 4");
+  46   2                               Timer0_Delay1ms(300);
+  47   2                   }
+  48   1                   //*/
+  49   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    116    ----
+   CONSTANT SIZE    =     65    ----
+C51 COMPILER V9.53.0.0   MAIN                                                              05/29/2021 17:47:56 PAGE 2   
+
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
